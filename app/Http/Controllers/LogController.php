@@ -14,20 +14,13 @@ class LogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	
     public function index()
     {
         //Get all Logs
-		$log = DB::table('log')->get();
-		return $log;
-		#$l = App\Log::showAllLogs();
-		#return $l;
-		#$l = App\Log::all();
-		#return $log;
+		$log = new Log();
+		return $log->showAllLogs();
     }
-
-
-	
-
 
     /**
      * Show the form for creating a new resource.
@@ -36,8 +29,7 @@ class LogController extends Controller
      */
     public function create()
     {
-        //Create log
-		#$log = Log::create();
+		return view('post.create');
     }
 
     /**
@@ -49,6 +41,12 @@ class LogController extends Controller
     public function store(Request $request)
     {
         //
+		$log = new Log;
+		$log->event = $request->event;
+		$log->resloved = $request->resolved;
+        #$log_values = array("event" => "Some new event", "resolved" => "no", "name" => "Kalle", "type" => "Mac");
+        #$log->createNewLog($log_values);
+		$log->save();
     }
 
     /**
@@ -58,11 +56,11 @@ class LogController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-	public function show($id)
+	public function get($id)
     {
         //Show a log
-		$log = Log::getOneLog($id);
-		return $log;
+		$log = new Log();
+		return $log->getOneLog($id);
     }
 
     /**

@@ -15,11 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('log/create', 'LogController@create')->name('create');
-Route::get('log/get/{post}', 'LogController@get')->name('show');
+Route::get('log/index', 'LogController@index');
+Route::get('log', 'LogController@index');
+Route::get('log/get/{post}', 'LogController@get');
+Route::post('log/create', 'LogController@create')->name('index');
+
 Route::put('log/update/{post}', 'LogController@update')->name('update');
 Route::delete('log/delete/{post}', 'LogController@delete')->name('delete');
-Route::get('log/index', 'LogController@index')->name('index');
 
 Route::post('log/create_owner', 'LogController@create_owner')->name('create_owner');
 Route::get('log/get_owner/{post}', 'LogController@get_owner')->name('get_owner');

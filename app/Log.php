@@ -3,31 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-#use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 use App\Log;
 
 class Log extends Model
 {
 	protected $table = 'log';
 
-    //
-	#public function owner(){
-	#	return $this->hasMany('App\Owner');
+	#public static function createNewLog($arr){
+	
 	#}
 
-	#public function getall(){
-	#	return "hej";
-	#	return $this -> DB::table('log')->get();	
-	#}
-	
+	//Get all logs
 	public function showAllLogs(){
-		#$log = Log::all();
-		return $this->hasMany('App\Device');
+		return Log::all();
 	}
 
 	public static function getOneLog($id){
-		$log = Log::find($id);
-		return $log;
+		return Log::find($id);
 	}
 
 }
