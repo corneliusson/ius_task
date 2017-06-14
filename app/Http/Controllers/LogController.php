@@ -18,8 +18,16 @@ class LogController extends Controller
     public function index()
     {
         //Get all Logs
-		$log = new Log();
-		return $log->showAllLogs();
+		$log = new Log;
+		$log_array = $log->getAllLogs();
+		foreach($log_array as $l){
+			echo "<b>id: </b>".$l->id." ";
+			echo "<b>Event: </b>".$l->event." ";
+			echo "<b>Resolved: </b>".$l->resolved." ";
+			echo "<b>Owner: </b>".$l->owners->name." ";
+			echo "<b>Device: </b>".$l->device->type." ";
+			echo "<br />";
+		}
     }
 
     /**
@@ -59,8 +67,16 @@ class LogController extends Controller
 	public function get($id)
     {
         //Show a log
-		$log = new Log();
-		return $log->getOneLog($id);
+		$log = new Log;
+		#return $log->getOneLog($id);
+		$log_array = $log->getOneLog($id);
+		echo $log_array;
+		#foreach($log_array as $l){
+		#	echo "<b>id: </b>".$l->id." ";
+		#	echo "<b>Owner: </b>".$l->owners->name." ";
+        #    echo "<b>Device: </b>".$l->device->type." ";
+
+		#}
     }
 
     /**
