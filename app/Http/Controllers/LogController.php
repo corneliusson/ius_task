@@ -14,7 +14,7 @@ class LogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	
+     
     public function index()
     {
         //Get all Logs
@@ -35,10 +35,25 @@ class LogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+	//creating a new log
     public function create()
     {
-		return view('post.create');
+        $form = "<form action='store' method='post'>";
+        $form .= "Event:<br />";
+        $form .= "<input type='text' name='event'><br /><br />";
+        $form .= "<input type='hidden' name='resolved' value='no'>";
+        $form .= "<input type='submit' value='Submit'>";
+        $form .= "</form>";
+        echo $form;
     }
+
+	//get all resolved logs
+	public function isresolved(){
+		$log = new Log;
+		return $log->isResolved();
+
+	}
 
     /**
      * Store a newly created resource in storage.
@@ -46,15 +61,29 @@ class LogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        //
-		$log = new Log;
-		$log->event = $request->event;
-		$log->resloved = $request->resolved;
-        #$log_values = array("event" => "Some new event", "resolved" => "no", "name" => "Kalle", "type" => "Mac");
-        #$log->createNewLog($log_values);
-		$log->save();
+     
+        //Validate, store, redirect
+        $this -> validate($request, array(
+            'event' => 'required|max:100',
+            #'resolved' => 'required|max:10'
+        ));
+       
+        
+        $log = new Log;
+        //$log->owners_id = $owners->id;
+        //$log->device_id = $device->id;
+        #$log->owners_id = $owners->id;
+        #$log->device_id = $device->id;   
+        $log->event = $request->event;
+        #$log->resolved = $request->resolved;
+        $log->save();
+        
+		//$log = new Log;
+        //$log->createLog();
+        return redirect()->route('index');
     }
 
     /**
@@ -63,20 +92,37 @@ class LogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
+
+	//get owner
+	public function get_owner($id){
+		$log = new Log;
+		$res = $log->getOwner($id);
+		return $res;
+	}
+
+	//get device
+	public function get_device($id){
+		$log = new Log;
+		$res = $log->getDevice($id);
+		return $res;
+	}  
+ 
 	public function get($id)
     {
         //Show a log
 		$log = new Log;
-		#return $log->getOneLog($id);
-		$log_array = $log->getOneLog($id);
-		echo $log_array;
-		#foreach($log_array as $l){
-		#	echo "<b>id: </b>".$l->id." ";
-		#	echo "<b>Owner: </b>".$l->owners->name." ";
-        #    echo "<b>Device: </b>".$l->device->type." ";
+		$res = $log->getOneLog($id);
+		
+		foreach($res as $v){
+			echo "<b>id: </b>".$v->id. " ";
+			echo "<b>Event: </b>".$v->event." ";
+			echo "<b>Resolved: </b>".$v->resolved." ";
+			echo "<b>Name: </b>".$v->name." ";
+			echo "<b>Type: </b>".$v->type." ";
+			echo "<br />";
+		}
+				
 
-		#}
     }
 
     /**
@@ -99,7 +145,8 @@ class LogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+     	//
+		
     }
 
     /**
@@ -110,6 +157,8 @@ class LogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //delete a log
+		$log = new Log;
+		$log->deleteLog();
     }
 }

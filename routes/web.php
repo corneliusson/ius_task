@@ -18,10 +18,14 @@ Route::get('/', function () {
 Route::get('log/index', 'LogController@index');
 Route::get('log', 'LogController@index');
 Route::get('log/get/{post}', 'LogController@get');
-Route::post('log/create', 'LogController@create')->name('index');
+Route::get('log/isresolved','LogController@isresolved');
 
-Route::put('log/update/{post}', 'LogController@update')->name('update');
-Route::delete('log/delete/{post}', 'LogController@delete')->name('delete');
+Route::get('log/create', 'LogController@create');
+Route::put('log/store/{post}', 'LogController@store');
+Route::post('log/store', 'LogController@store')->name('store');
+
+Route::put('log/update/{post}', 'LogController@update');
+Route::delete('log/delete/{post}', 'LogController@delete');
 
 Route::post('log/create_owner', 'LogController@create_owner')->name('create_owner');
 Route::get('log/get_owner/{post}', 'LogController@get_owner')->name('get_owner');

@@ -3,15 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Log;
+use App\Owners;
 
 class Owners extends Model
 {
-	#protected $table = 'Owners';
 
     //Owner can have many logs
-	public function logs(){
+	public function log(){
 		return $this->belongsToMany(Log::class);
 	}
+	
+	//
+	#public
 	
 	public function getOwner($id){
 		return Owners::find($id);
@@ -21,9 +25,9 @@ class Owners extends Model
 		$owner = Owners::find($id);
 		$owner = delete();
 	}
-	
+/*	
 	public function log(){
         return $this->hasMany(Log::class);
     }
-
+*/
 }
