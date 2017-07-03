@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Log;
+use App\Device;
+use App\Owners;
 
 class LogController extends Controller
 {
@@ -17,16 +19,17 @@ class LogController extends Controller
      
     public function index()
     {
+        echo "<a href='create'>Create Log</a><br />";
         //Get all Logs
 		$log = new Log;
 		$log_array = $log->getAllLogs();
 		foreach($log_array as $l){
-			echo "<b>id: </b>".$l->id." ";
+			echo "<a href='edit/".$l->id."'><b>id: </b>".$l->id." ";
 			echo "<b>Event: </b>".$l->event." ";
 			echo "<b>Resolved: </b>".$l->resolved." ";
 			echo "<b>Owner: </b>".$l->owners->name." ";
 			echo "<b>Device: </b>".$l->device->type." ";
-			echo "<br />";
+			echo "<br /></a> ";
 		}
     }
 
@@ -39,15 +42,28 @@ class LogController extends Controller
 	//creating a new log
     public function create()
     {
-        $form = "<form action='store' method='post'>";
-        $form .= "Event:<br />";
-        $form .= "<input type='text' name='event'><br /><br />";
-        $form .= "<input type='hidden' name='resolved' value='no'>";
-        $form .= "<input type='submit' value='Submit'>";
-        $form .= "</form>";
+  
+        $form = '
+        	<form action="store" method="post">
+        	Owner:<br />
+        	<input type="text" name="name"><br />
+            
+        	Device:<br />
+        	<input type="text" name="type"><br />
+            
+        	Event:<br />
+        	<input type="text" name="event"><br /><br />
+            
+        	Resolved?:<br />
+        	<input type="radio" name="resolved" value="no" checked>No<br />
+        	<input type="radio" name="resolved" value="yes"> Yes<br />
+        	<input type="submit" value="Submit">
+		 
+			</form>
+        ';
+
         echo $form;
     }
-
 	//get all resolved logs
 	public function isresolved(){
 		$log = new Log;
@@ -63,27 +79,15 @@ class LogController extends Controller
      */
 
     public function store(Request $request)
-    {
-     
-        //Validate, store, redirect
+    {  
         $this -> validate($request, array(
-            'event' => 'required|max:100',
-            #'resolved' => 'required|max:10'
+                'name' => 'required|max:20',
+                'type'=> 'required|max:50',
+                'event' => 'required|max:255'
         ));
-       
-        
         $log = new Log;
-        //$log->owners_id = $owners->id;
-        //$log->device_id = $device->id;
-        #$log->owners_id = $owners->id;
-        #$log->device_id = $device->id;   
-        $log->event = $request->event;
-        #$log->resolved = $request->resolved;
-        $log->save();
-        
-		//$log = new Log;
-        //$log->createLog();
-        return redirect()->route('index');
+        $log->insertNewLog($request);
+		return redirect()->route('index');
     }
 
     /**
@@ -133,7 +137,29 @@ class LogController extends Controller
      */
     public function edit($id)
     {
-        //
+        //Edit Log
+        $log = new Log;
+        $res = $log->getOneLog($id);
+        
+        foreach($res as $value){
+            echo '<form action="/log/update" method="post">';
+            echo 'Owner:<br /><input type="text" name="name" value="'.$value->name.'"><br />';
+            echo 'Device:<br /><input type="text" name="type" value="'.$value->type.'"><br />';
+            echo 'Event:<br /><input type="text" name="event" value="'.$value->event.'"><br /><br />';
+            echo 'Resolved?<br />';
+            if($value->resolved == 'yes'){
+                echo '<input type="radio" name="resolved" value="no" >No<br />';
+                echo '<input type="radio" name="resolved" value="yes" checked> Yes<br />';                
+            }
+            elseif($value->resolved == 'no'){
+                echo '<input type="radio" name="resolved" value="no" checked>No<br />';
+                echo '<input type="radio" name="resolved" value="yes"> Yes<br />';                
+            }
+            echo '<input type="submit" value="Submit">';
+            echo '</form>';
+        }
+       
+        
     }
 
     /**
@@ -145,7 +171,18 @@ class LogController extends Controller
      */
     public function update(Request $request, $id)
     {
-     	//
+
+        $this -> validate($request, array(
+                'name' => 'required|max:20',
+                'type'=> 'required|max:50',
+                'event' => 'required|max:255'
+        ));
+        
+        echo $request->name;
+        //$log = new Log;
+        //$log->updateLog($request);
+
+    	//return redirect()->route('index');
 		
     }
 

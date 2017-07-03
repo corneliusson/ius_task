@@ -25,7 +25,7 @@ class StoreLogPost extends FormRequest
     {
         return [
             'name' => 'required|max:30',
-            'device'=> 'required|max:20',
+            'type'=> 'required|max:20',
             'event' => 'required|max:100'
         ];
     }

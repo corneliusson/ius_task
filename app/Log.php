@@ -11,32 +11,48 @@ use App\Device;
 class Log extends Model
 {
 	protected $table = 'log';
-
-	//Create Log
-	public function createLog(){
-       //Validate, store
-/*
-        $this -> validate($request, array(
-            'name' => 'required|max:30',
-            'device'=> 'required|max:20',
-            'event' => 'required|max:100'
-        ));
-*/
-/*
-        $owners = new Owners;
-        $owners->name = $request->name;
-        $owners->save();
-
-        $device = new Device;
-        $device->type = $request->type;
-        $device->save();
-*/
+    
+    //Update Log
+    public function updateLog(){
         $log = new Log;
-        //$log->owners_id = $owners->id;
-        //$log->device_id = $device->id;
-        $log->event = $request->event;
-        $log->resolved = $request->resolved;
-        //$log->save();
+    	$log = Log::find($id);
+    	$log->event = $request->input('event');
+    	$log->resolved = $request->input('resolved');
+    	$log->save();
+
+		$owner = new Owners;
+    	$owner = DB::table('owners')
+        	->where('id', $log->owners_id)
+        	->update(['name' => $request->input('name')]);
+		$owner->save();
+
+		$device = new Device;
+    	$device = DB::table('device')
+        	->where('id', $log->device_id)
+        	->update(['type' => $request->input('type')]);
+		$device->save();
+    }
+    
+	//Create Log
+	public function insertNewLog($request){
+		//Save owner
+		$owner = new Owners;
+		$owner->name = $request->name;
+		$owner->save();
+	
+		//Save device
+		$device = new Device;
+		$device->type = $request->type;
+		$device->save();
+
+	
+		//Save log
+		$log = new Log;
+		$log->event = $request->event;
+		$log->resolved = $request->resolved;
+		$log->device_id = $device->id;
+		$log->owners_id = $owner->id;
+		$log->save();
 
 	}
 
@@ -67,8 +83,7 @@ class Log extends Model
 			->where('log.id', '=', $id)
 			->get();
 		
-		return $log; 	
-
+		return $log;
 	}
 
 	//get a device
