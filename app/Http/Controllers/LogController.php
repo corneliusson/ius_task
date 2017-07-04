@@ -24,7 +24,7 @@ class LogController extends Controller
 		$log = new Log;
 		$log_array = $log->getAllLogs();
 		foreach($log_array as $l){
-			echo "<a href='edit/".$l->id."'><b>id: </b>".$l->id." ";
+			echo "<a href='log/edit/".$l->id."'><b>id: </b>".$l->id." ";
 			echo "<b>Event: </b>".$l->event." ";
 			echo "<b>Resolved: </b>".$l->resolved." ";
 			echo "<b>Owner: </b>".$l->owners->name." ";
@@ -142,7 +142,7 @@ class LogController extends Controller
         $res = $log->getOneLog($id);
         
         foreach($res as $value){
-            echo '<form action="/log/update" method="post">';
+            echo '<form action="/log/update" method="PUT">';
             echo 'Owner:<br /><input type="text" name="name" value="'.$value->name.'"><br />';
             echo 'Device:<br /><input type="text" name="type" value="'.$value->type.'"><br />';
             echo 'Event:<br /><input type="text" name="event" value="'.$value->event.'"><br /><br />';
@@ -171,14 +171,24 @@ class LogController extends Controller
      */
     public function update(Request $request, $id)
     {
+		echo "Hepp";
+		/*
 
         $this -> validate($request, array(
                 'name' => 'required|max:20',
                 'type'=> 'required|max:50',
                 'event' => 'required|max:255'
         ));
-        
-        echo $request->name;
+       
+		$log = Log::find($id);
+    	$log->owner = $request->input('name');
+    	$log->device = $request->input('type');
+    	$log->event = $request->input('event');
+    	$log->resolved = $request->input('resolved');
+
+		*/
+    	//$log->save(); 
+        //echo $request->id;
         //$log = new Log;
         //$log->updateLog($request);
 

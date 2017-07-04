@@ -27,7 +27,7 @@ Route::put('log/store/{post}', 'LogController@store');
 Route::post('log/store', 'LogController@store');
 Route::post('log/update', 'LogController@update');
 
-//Route::put('log/update/{post}', 'LogController@update');
+Route::put('log/update/{post}', 'LogController@update');
 Route::delete('log/delete/{post}', 'LogController@delete');
 
 Route::post('log/create_owner', 'LogController@create_owner')->name('create_owner');
