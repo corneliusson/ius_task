@@ -19,17 +19,20 @@ class LogController extends Controller
      
     public function index()
     {
-        echo "<a href='create'>Create Log</a><br />";
+        echo "<a href='create'>Create log</a><br />";
+		echo "<a href='isresolved'>Resolved</a><br />";
+
         //Get all Logs
 		$log = new Log;
 		$log_array = $log->getAllLogs();
 		foreach($log_array as $l){
-			echo "<a href='log/edit/".$l->id."'><b>id: </b>".$l->id." ";
+			echo "<a href='edit/".$l->id."'><b>id: </b>".$l->id." ";
 			echo "<b>Event: </b>".$l->event." ";
 			echo "<b>Resolved: </b>".$l->resolved." ";
 			echo "<b>Owner: </b>".$l->owners->name." ";
 			echo "<b>Device: </b>".$l->device->type." ";
-			echo "<br /></a> ";
+			echo "</a> ";
+			echo "<a href='delete/".$l->id."'> Delete</a><br />";
 		}
     }
 
@@ -64,11 +67,19 @@ class LogController extends Controller
 
         echo $form;
     }
+
 	//get all resolved logs
 	public function isresolved(){
 		$log = new Log;
-		return $log->isResolved();
-
+		$log = $log->isResolved();
+		foreach($log as $v){
+            echo "<b>id: </b>".$v->id. " ";
+            echo "<b>Event: </b>".$v->event." ";
+            echo "<b>Resolved: </b>".$v->resolved." ";
+            echo "<b>Name: </b>".$v->name." ";
+            echo "<b>Type: </b>".$v->type." ";
+            echo "<br />";
+        }
 	}
 
     /**
@@ -142,7 +153,9 @@ class LogController extends Controller
         $res = $log->getOneLog($id);
         
         foreach($res as $value){
-            echo '<form action="/log/update" method="PUT">';
+            echo '<form action="/log/update/'.$value->id.'" method="post">';
+			echo '<input type="hidden" name="_method" value="PUT">';
+			echo '<input type="hidden" name="id" value="'.$value->id.'">';
             echo 'Owner:<br /><input type="text" name="name" value="'.$value->name.'"><br />';
             echo 'Device:<br /><input type="text" name="type" value="'.$value->type.'"><br />';
             echo 'Event:<br /><input type="text" name="event" value="'.$value->event.'"><br /><br />';
@@ -171,29 +184,17 @@ class LogController extends Controller
      */
     public function update(Request $request, $id)
     {
-		echo "Hepp";
-		/*
+		
 
         $this -> validate($request, array(
                 'name' => 'required|max:20',
                 'type'=> 'required|max:50',
                 'event' => 'required|max:255'
         ));
-       
-		$log = Log::find($id);
-    	$log->owner = $request->input('name');
-    	$log->device = $request->input('type');
-    	$log->event = $request->input('event');
-    	$log->resolved = $request->input('resolved');
 
-		*/
-    	//$log->save(); 
-        //echo $request->id;
-        //$log = new Log;
-        //$log->updateLog($request);
-
-    	//return redirect()->route('index');
-		
+		$log = new Log;
+        $log->updateLog($request, $id);
+		return redirect()->route('index');
     }
 
     /**

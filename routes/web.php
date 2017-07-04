@@ -16,7 +16,12 @@ Route::get('/', function () {
 });
 
 Route::get('log/index', 'LogController@index')->name('index');
-Route::get('log', 'LogController@index');
+//Route::get('log', 'LogController@index');
+Route::get('log', function(){
+	return redirect()->route('index');
+});
+
+
 Route::get('log/get/{post}', 'LogController@get');
 Route::get('log/isresolved','LogController@isresolved');
 Route::get('log/edit/{post}', 'LogController@edit');
@@ -25,7 +30,8 @@ Route::get('log/edit/{post}', 'LogController@edit');
 Route::get('log/create', 'LogController@create');
 Route::put('log/store/{post}', 'LogController@store');
 Route::post('log/store', 'LogController@store');
-Route::post('log/update', 'LogController@update');
+Route::put('log/update/{post}', 'LogController@update');
+
 
 Route::put('log/update/{post}', 'LogController@update');
 Route::delete('log/delete/{post}', 'LogController@delete');

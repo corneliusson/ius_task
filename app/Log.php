@@ -13,23 +13,18 @@ class Log extends Model
 	protected $table = 'log';
     
     //Update Log
-    public function updateLog(){
-        $log = new Log;
-    	$log = Log::find($id);
-    	$log->event = $request->input('event');
-    	$log->resolved = $request->input('resolved');
-    	$log->save();
-
-		$owner = new Owners;
-    	$owner = DB::table('owners')
-        	->where('id', $log->owners_id)
-        	->update(['name' => $request->input('name')]);
+    public function updateLog($request, $id){
+        $log = Log::find($id);
+        $log->event = $request->input('event');
+        $log->resolved = $request->input('resolved');
+        $log->save();
+		
+		$owner = Owners::find($log->device_id);
+		$owner->name = $request->input('name');
 		$owner->save();
 
-		$device = new Device;
-    	$device = DB::table('device')
-        	->where('id', $log->device_id)
-        	->update(['type' => $request->input('type')]);
+    	$device = Device::find($log->owners_id);
+		$device->type = $request->input('type');
 		$device->save();
     }
     
