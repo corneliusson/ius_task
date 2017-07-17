@@ -55,6 +55,16 @@ class Log extends Model
 		$log = Log::find($id);
 		$log->delete();
 	}
+
+	public function deleteOwner($id){
+		$log = Owners::find($id);
+        $log->delete();
+	}
+
+    public function deleteDevice($id){
+        $log = Device::find($id);
+        $log->delete();
+    }
 	
 	//logs that are resolved
 	public function isResolved(){
@@ -103,14 +113,4 @@ class Log extends Model
         return $this->belongsTo(Device::class);
     }
 
-	public function own(){
-		$o = Owners::find(1)->log;
-		return $o;
-		#return Owners::find(1);
-		#echo $ow;
-		#$ow = App\Owners::find(1);
-		#return $ow->owners->name;
-		#$own = Owners::find(1);
-		#return $own;
-	}
 }

@@ -32,7 +32,7 @@ class LogController extends Controller
 			echo "<b>Owner: </b>".$l->owners->name." ";
 			echo "<b>Device: </b>".$l->device->type." ";
 			echo "</a> ";
-			echo "<a href='delete/".$l->id."'> Delete</a><br />";
+			echo "<a href='destroy/".$l->id."'> Delete</a><br />";
 		}
     }
 
@@ -205,8 +205,21 @@ class LogController extends Controller
      */
     public function destroy($id)
     {
-        //delete a log
-		$log = new Log;
-		$log->deleteLog();
+		//Delete Log
+
+        $log = new Log;
+        $res = $log->getOneLog($id);
+
+        foreach($res as $value){
+            echo '<form action="/log/update/'.$value->id.'" method="post">';
+            echo '<input type="hidden" name="_method" value="delete">';
+            echo '<input type="hidden" name="id" value="'.$value->id.'">';
+            echo 'Event:<br /><input type="text" name="event" value="'.$value->event.'"><br /><br />';
+            echo '<input type="submit" value="Submit">';
+            echo '</form>';
+        }
+		$log->deleteLog($id);	
+		return redirect()->route('index');
+
     }
 }
