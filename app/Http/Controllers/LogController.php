@@ -76,8 +76,8 @@ class LogController extends Controller
             echo "<b>id: </b>".$v->id. " ";
             echo "<b>Event: </b>".$v->event." ";
             echo "<b>Resolved: </b>".$v->resolved." ";
-            echo "<b>Name: </b>".$v->name." ";
-            echo "<b>Type: </b>".$v->type." ";
+            echo "<b>Name: </b>".$v->Owners->name." ";
+            echo "<b>Type: </b>".$v->Device->type." ";
             echo "<br />";
         }
 	}
